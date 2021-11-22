@@ -76,7 +76,6 @@ Route::delete('/food/{id}', 'App\Http\Controllers\Api\Auth\FoodController@destro
 Route::get('/food/search/{search}', 'App\Http\Controllers\Api\Auth\FoodController@search')->name('api.auth.search.food');
 
 //food_categories
-Route::get('/food_categories', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@index')->name('api.auth.index.food_categories');
 Route::get('/food_categories/{id}', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@show')->name('api.auth.show.food_categories');
 Route::post('/food_categories', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@store')->name('api.auth.store.food_categories');
 Route::post('/food_categories/{id}', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@update')->name('api.auth.update.food_categories');
@@ -181,6 +180,9 @@ Route::get('/visitor_information/search/{search}', 'App\Http\Controllers\Api\Aut
    
 });
 
+
+
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -194,6 +196,9 @@ Route::group([
     Route::post('/library-login', [AuthController::class, 'libraryLogin']);
 
 });
+
+Route::get('/auth/food_categories', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@index')->name('api.auth.index.food_categories');
+
 
 
 

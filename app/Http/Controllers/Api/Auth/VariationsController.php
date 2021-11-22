@@ -61,7 +61,9 @@ class VariationsController extends Controller
     public function store(Request $request)
     {
         try {
-            $variations = Variations::create($request->all());
+            $variations = new Variations;
+            $variations->variation_name = $request['variation_name'];
+            $variations->school_id = Auth::user()->id;
             $variations->save();
 
             return response([
@@ -170,7 +172,8 @@ class VariationsController extends Controller
 
             $variations = Variations::find($id);
 
-           $variations->variation_name = $input['variation_name'];$variations->created_at = $input['created_at'];$variations->updated_at = $input['updated_at'];
+           $variations->variation_name = $input['variation_name'];
+           $variations->school_id = Auth::user()->id;
 
             $res = $variations->update();
             if ($res) {

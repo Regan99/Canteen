@@ -7,6 +7,7 @@ use App\Models\Food;
 use App\Models\Users;
 use App\Models\FoodCategories;
 use App\Models\Variations;
+use App\Models\FoodVariation;
 use Facade\Ignition\Tabs\Tab;
 use Illuminate\Http\Request;
 use App\BackendRepository\UuidRepository\UuidRepository;
@@ -36,11 +37,9 @@ class FoodController extends Controller
             foreach ($food as $f) {
                 $school = Users::where('id',$f['school_id'])->get()->first();
                 $food_cat = FoodCategories::where('id', $f['food_category_id'])->get()->first();
-                $variation = Variations::where('id', $f['variation_id'])->get()->first();
                 $f['image_url'] = '/images/thumbnail/'.$f['image'];
                 $f['school_name'] = $school['name'];
                 $f['category_name'] = $food_cat['category_name'];
-                $f['variation_name'] = $variation['variation_name'];
             }
             if ($food) {
                 return response([
@@ -86,14 +85,22 @@ class FoodController extends Controller
         try {
             $food = new Food;
             $food->food_category_id = $request['food_category_id'];
-            $food->variation_id = $request['variation_id'];
             $food->school_id = Auth::user()->id;
             $food->food_name = $request['food_name'];
             $food->image = $this->saveImage->saveImage($request);
-            $food->price = $request['price'];
-            $food->discount = $request['discount'];
             $food->status = $request['status'];
             $food->save();
+            
+            foreach ($request['variation'] as $variation) {
+                $food_variation = new FoodVariation;
+                $food_variation->food_id = $food['id'];
+                $food_variation->variation_id = $variation['variation_id'];
+                $food_variation->price = $variation['price'];
+                $food_variation->discount = $variation['discount'];
+                $food_variation->save();
+
+            }
+            
 
             return response([
                 'status' => 'success',
@@ -153,11 +160,19 @@ class FoodController extends Controller
     {
         try {
             $food = Food::where('id', '=', $id)->first();
+            $food_category = FoodCategories::where('id', $food['food_category_id'])->get()->first();
+            $food['food_category_name'] = $food_category['category_name'];
+            $variation = FoodVariation::where('food_id', $food['id'])->get();
+            foreach ($variation as $v) {
+                $var = Variations::where('id', $v['variation_id'])->get()->first();
+                $v['variation_name'] = $var['variation_name'];
+            }
             if ($food) {
                 return response([
                     'status' => 'success',
                     'code' => 1,
-                    'data' => $food
+                    'data' => $food,
+                    'variation' => $variation
                 ], 200);
             } else {
 
@@ -211,10 +226,24 @@ class FoodController extends Controller
                 $food->image = $this->saveImage->saveImage($request);
            }
            $food->price = $input['price'];
-           $food->discount = $input['discount'];
            $food->status = $input['status'];
 
             $res = $food->update();
+
+            $food_var = FoodVariation::where('food_id', $food['id'])->get();
+            foreach ($food_var as $f) {
+                $f->delete();
+            }
+
+            foreach ($request['variation'] as $variation) {
+                $food_variation = new FoodVariation;
+                $food_variation->food_id = $food['id'];
+                $food_variation->variation_id = $variation['variation_id'];
+                $food_variation->price = $variation['price'];
+                $food_variation->discount = $variation['discount'];
+                $food_variation->save();
+
+            }
             if ($res) {
                 return response([
                     'status' => 'success',
@@ -245,7 +274,13 @@ class FoodController extends Controller
     public function destroy($id)
     {
         try {
-            $res = Food::find($id)->delete();
+            $food = Food::find($id);
+            $this->deleteImage->deleteImage($food);
+            $variation = FoodVariation::where('food_id',$food['id'])->get();
+            foreach ($variation as $v) {
+                $v->delete();
+            }
+            $res = $food->delete();
             if ($res) {
                 return response([
                     'status' => 'success',

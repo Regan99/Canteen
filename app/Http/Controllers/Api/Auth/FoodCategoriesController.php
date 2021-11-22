@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\BackendRepository\UuidRepository\UuidRepository;
 use App\BackendRepository\ImageRepository\SaveImageRepository;
 use App\BackendRepository\ImageRepository\DeleteImageRepository;
+use Auth;
 
 class FoodCategoriesController extends Controller
 {
@@ -81,6 +82,7 @@ class FoodCategoriesController extends Controller
         ]);
         try {
             $food_categories = new FoodCategories;
+            $food_categories->school_id = Auth::user()->id;
             $food_categories->category_name = $request['category_name'];
             $food_categories->image = $this->saveImage->saveImage($request);
             $food_categories->status = $request['status'];
@@ -190,7 +192,7 @@ class FoodCategoriesController extends Controller
 
         try {
             $food_categories = FoodCategories::where('id',$id)->get()->first();
-
+            $food_categories->school_id = Auth::user()->id;
             $food_categories->category_name = $request['category_name'];
            if ($request->hasFile('image')) 
            {
@@ -230,7 +232,9 @@ class FoodCategoriesController extends Controller
     public function destroy($id)
     {
         try {
-            $res = FoodCategories::find($id)->delete();
+            $food_cat = FoodCategories::find($id);
+            $this->deleteImage->deleteImage($food_cat);
+            $res = $food_cat->delete();
             if ($res) {
                 return response([
                     'status' => 'success',
