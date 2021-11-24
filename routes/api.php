@@ -154,7 +154,7 @@ Route::get('/users/search/{search}', 'App\Http\Controllers\Api\Auth\UsersControl
 Route::get('/variations', 'App\Http\Controllers\Api\Auth\VariationsController@index')->name('api.auth.index.variations');
 Route::get('/variations/{id}', 'App\Http\Controllers\Api\Auth\VariationsController@show')->name('api.auth.show.variations');
 Route::post('/variations', 'App\Http\Controllers\Api\Auth\VariationsController@store')->name('api.auth.store.variations');
-Route::put('/variations/{id}', 'App\Http\Controllers\Api\Auth\VariationsController@update')->name('api.auth.update.variations');
+Route::post('/variations/{id}', 'App\Http\Controllers\Api\Auth\VariationsController@update')->name('api.auth.update.variations');
 Route::delete('/variations/{id}', 'App\Http\Controllers\Api\Auth\VariationsController@destroy')->name('api.auth.delete.variations');
 Route::get('/variations/search/{search}', 'App\Http\Controllers\Api\Auth\VariationsController@search')->name('api.auth.search.variations');
 

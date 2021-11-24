@@ -224,7 +224,6 @@ class FoodController extends Controller
             $food = Food::find($id);
 
            $food->food_category_id = $input['food_category_id'];
-           $food->variation_id = $input['variation_id'];
            if (Auth::user()->school_id != null) {
                 $food->school_id = Auth::user()->school_id;
             }
@@ -238,7 +237,6 @@ class FoodController extends Controller
                 $this->deleteImage->deleteImage($food);
                 $food->image = $this->saveImage->saveImage($request);
            }
-           $food->price = $input['price'];
            $food->status = $input['status'];
 
             $res = $food->update();

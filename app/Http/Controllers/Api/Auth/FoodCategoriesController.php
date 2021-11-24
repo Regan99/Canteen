@@ -150,6 +150,7 @@ class FoodCategoriesController extends Controller
     {
         try {
             $food_categories = FoodCategories::where('id', '=', $id)->first();
+            $food_categories['image_url'] = '/images/thumbnail/'.$food_categories['image'];
             if ($food_categories) {
                 return response([
                     'status' => 'success',
@@ -278,6 +279,7 @@ class FoodCategoriesController extends Controller
                 foreach ($variations as $variation) {
                     $var = Variations::where('id', $variation['variation_id'])->get()->first();
                     $variation['variation_name'] = $var['variation_name'];
+                    $variation['food_name'] = $f['food_name'];
 
                 }
                 $f['variations'] = $variations;
