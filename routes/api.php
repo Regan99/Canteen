@@ -76,11 +76,15 @@ Route::delete('/food/{id}', 'App\Http\Controllers\Api\Auth\FoodController@destro
 Route::get('/food/search/{search}', 'App\Http\Controllers\Api\Auth\FoodController@search')->name('api.auth.search.food');
 
 //food_categories
+Route::get('/food_categories', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@index')->name('api.auth.index.food_categories');
 Route::get('/food_categories/{id}', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@show')->name('api.auth.show.food_categories');
 Route::post('/food_categories', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@store')->name('api.auth.store.food_categories');
 Route::post('/food_categories/{id}', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@update')->name('api.auth.update.food_categories');
 Route::delete('/food_categories/{id}', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@destroy')->name('api.auth.delete.food_categories');
 Route::get('/food_categories/search/{search}', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@search')->name('api.auth.search.food_categories');
+
+//food with categories
+Route::get('food_pos/{id}', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@food_pos')->name('api.auth.food_pos');
 
 //food_order
 Route::get('/food_orders', 'App\Http\Controllers\Api\Auth\FoodOrdersController@index')->name('api.auth.index.food_orders');
@@ -197,7 +201,9 @@ Route::group([
 
 });
 
-Route::get('/auth/food_categories', 'App\Http\Controllers\Api\Auth\FoodCategoriesController@index')->name('api.auth.index.food_categories');
+
+
+
 
 
 

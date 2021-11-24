@@ -16,7 +16,7 @@ class SaveImageRepository extends Controller
 			$this->createDirectory();
 			$file = $request['image'];
 			$image = Image::make($file);
-			$imagename = time().'.'.$file->getClientOriginalExtension();
+			$imagename = time().'-'.mt_rand(5, 100000).'.'.$file->getClientOriginalExtension();
 			$image->save($this->imagePath.$imagename);
 			$image->resize(400,400);
 			$image->save($this->thumbnailPath.$imagename);

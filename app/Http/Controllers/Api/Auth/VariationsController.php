@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Variations;
 use Facade\Ignition\Tabs\Tab;
 use Illuminate\Http\Request;
+use Auth;
 
 class VariationsController extends Controller
 {
@@ -63,7 +64,14 @@ class VariationsController extends Controller
         try {
             $variations = new Variations;
             $variations->variation_name = $request['variation_name'];
-            $variations->school_id = Auth::user()->id;
+            if (Auth::user()->school_id != null) {
+                $variations->school_id = Auth::user()->school_id;
+            }
+            else
+            {
+                $variations->school_id = Auth::user()->id;
+            }
+            
             $variations->save();
 
             return response([
@@ -173,7 +181,13 @@ class VariationsController extends Controller
             $variations = Variations::find($id);
 
            $variations->variation_name = $input['variation_name'];
-           $variations->school_id = Auth::user()->id;
+           if (Auth::user()->school_id != null) {
+                $variations->school_id = Auth::user()->school_id;
+            }
+            else
+            {
+                $variations->school_id = Auth::user()->id;
+            }
 
             $res = $variations->update();
             if ($res) {

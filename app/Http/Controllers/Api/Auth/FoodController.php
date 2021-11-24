@@ -85,13 +85,20 @@ class FoodController extends Controller
         try {
             $food = new Food;
             $food->food_category_id = $request['food_category_id'];
-            $food->school_id = Auth::user()->id;
+            if (Auth::user()->school_id != null) {
+                $food->school_id = Auth::user()->school_id;
+            }
+            else
+            {
+                $food->school_id = Auth::user()->id;
+            }
             $food->food_name = $request['food_name'];
             $food->image = $this->saveImage->saveImage($request);
             $food->status = $request['status'];
+            $variations = json_decode($request['variation'], true);
             $food->save();
             
-            foreach ($request['variation'] as $variation) {
+            foreach ($variations as $variation) {
                 $food_variation = new FoodVariation;
                 $food_variation->food_id = $food['id'];
                 $food_variation->variation_id = $variation['variation_id'];
@@ -218,7 +225,13 @@ class FoodController extends Controller
 
            $food->food_category_id = $input['food_category_id'];
            $food->variation_id = $input['variation_id'];
-           $food->school_id = $input['school_id'];
+           if (Auth::user()->school_id != null) {
+                $food->school_id = Auth::user()->school_id;
+            }
+            else
+            {
+                $food->school_id = Auth::user()->id;
+            }
            $food->food_name = $input['food_name'];
            if ($request->hasFile('image')) 
            {

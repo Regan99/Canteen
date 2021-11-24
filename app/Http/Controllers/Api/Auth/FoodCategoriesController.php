@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\FoodCategories;
+use App\Models\Food;
+use App\Models\FoodVariation;
+use App\Models\Variations;
 use Facade\Ignition\Tabs\Tab;
 use Illuminate\Http\Request;
 use App\BackendRepository\UuidRepository\UuidRepository;
@@ -75,14 +78,15 @@ class FoodCategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'category_name' => 'required',
-            'image' => 'required',
-            'status' => 'required'
-        ]);
         try {
             $food_categories = new FoodCategories;
-            $food_categories->school_id = Auth::user()->id;
+            if (Auth::user()->school_id != null) {
+                $food_categories->school_id = Auth::user()->school_id;
+            }
+            else
+            {
+                $food_categories->school_id = Auth::user()->id;
+            }
             $food_categories->category_name = $request['category_name'];
             $food_categories->image = $this->saveImage->saveImage($request);
             $food_categories->status = $request['status'];
@@ -192,7 +196,13 @@ class FoodCategoriesController extends Controller
 
         try {
             $food_categories = FoodCategories::where('id',$id)->get()->first();
-            $food_categories->school_id = Auth::user()->id;
+            if (Auth::user()->school_id != null) {
+                $food_categories->school_id = Auth::user()->school_id;
+            }
+            else
+            {
+                $food_categories->school_id = Auth::user()->id;
+            }
             $food_categories->category_name = $request['category_name'];
            if ($request->hasFile('image')) 
            {
@@ -254,6 +264,49 @@ class FoodCategoriesController extends Controller
                 'code' => 0,
                 'message' => "Failed to delete food_categories, please try again. {$exception->getMessage()}"
             ], 500);
+        }
+    }
+
+    public function food_pos($id)
+    {
+        try
+        {
+            $food = Food::where('food_category_id', $id)->where('status', 'active')->get();
+            foreach ($food as $f) {
+                $f['image_url'] = '/images/thumbnail/'.$f['image'];
+                $variations = FoodVariation::where('food_id', $f['id'])->get();
+                foreach ($variations as $variation) {
+                    $var = Variations::where('id', $variation['variation_id'])->get()->first();
+                    $variation['variation_name'] = $var['variation_name'];
+
+                }
+                $f['variations'] = $variations;
+                
+
+
+            }
+            if (count($food) > 0) {
+                return response([
+                    'status' => 'success',
+                    'code' => 1,
+                    'data' => $food
+                ], 200);
+            } else {
+                return response([
+                    'status' => 'error',
+                    'code' => 0,
+                    'data' => "No record found"
+                ], 404);
+            }
+        }
+        catch(\Exception $exception)
+        {
+            return response([
+                'status' => 'error',
+                'code' => 0,
+                'message' => "Failed to show foods, please try again. {$exception->getMessage()}"
+            ], 500);
+
         }
     }
 }
