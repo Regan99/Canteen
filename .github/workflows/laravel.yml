@@ -1,0 +1,21 @@
+name: Laravel
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  laravel-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+      with:
+        username: 'sql_cxxcsurti'
+        host: '164.68.127.153'
+        password: 'LDCLFHJEshkzJKX2'
+        script: 'cd /www/wwwroot/canteen.trimurtitechnology.com/k && ./deployer.sh'
+    
