@@ -87,7 +87,13 @@ class BooksController extends Controller
             $books = new Books;
             $books->uuid = $this->uuid->generateUuid('books');
             $books->book_category_id = $request['book_category_id'];
-            $books->school_id = Auth::user()->id;
+            if (Auth::user()->school_id != null) {
+                $books->school_id = Auth::user()->school_id;
+            }
+            else
+            {
+                $books->school_id = Auth::user()->id;
+            }
             $books->book_name = $request['book_name'];
             $books->image = $this->saveImage->saveImage($request);
             $books->grade = $request['grade'];
@@ -200,7 +206,13 @@ class BooksController extends Controller
 
             $books = Books::find($id);
            $books->book_category_id = $input['book_category_id'];
-           $books->school_id = Auth::user()->id;
+           if (Auth::user()->school_id != null) {
+                $books->school_id = Auth::user()->school_id;
+            }
+            else
+            {
+                $books->school_id = Auth::user()->id;
+            }
            $books->book_name = $input['book_name'];
            if ($request->hasFile('image')) 
            {
@@ -241,7 +253,9 @@ class BooksController extends Controller
     public function destroy($id)
     {
         try {
-            $res = Books::find($id)->delete();
+            $res = Books::find($id);
+            $this->deleteImage->deleteImage($res);
+            $res->delete();
             if ($res) {
                 return response([
                     'status' => 'success',

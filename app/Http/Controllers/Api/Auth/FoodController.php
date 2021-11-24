@@ -245,8 +245,8 @@ class FoodController extends Controller
             foreach ($food_var as $f) {
                 $f->delete();
             }
-
-            foreach ($request['variation'] as $variation) {
+            $variations = json_decode($request['variation'], true);
+            foreach ($variations as $variation) {
                 $food_variation = new FoodVariation;
                 $food_variation->food_id = $food['id'];
                 $food_variation->variation_id = $variation['variation_id'];

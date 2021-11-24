@@ -65,7 +65,13 @@ class BookCategoriesController extends Controller
             // $book_categories = BookCategories::create($request->all());
             $book_categories = new BookCategories;
             $book_categories->book_category_name = $request['book_category_name'];
-            $book_categories->school_id = Auth::user()->id;
+            if (Auth::user()->school_id != null) {
+                $book_categories->school_id = Auth::user()->school_id;
+            }
+            else
+            {
+                $book_categories->school_id = Auth::user()->id;
+            }
             $book_categories->save();
 
             return response([
@@ -175,7 +181,13 @@ class BookCategoriesController extends Controller
             $book_categories = BookCategories::find($id);
 
            $book_categories->book_category_name = $input['book_category_name'];
-           $book_categories->school_id = Auth::user()->id;
+           if (Auth::user()->school_id != null) {
+                $book_categories->school_id = Auth::user()->school_id;
+            }
+            else
+            {
+                $book_categories->school_id = Auth::user()->id;
+            }
 
 
             $res = $book_categories->update();

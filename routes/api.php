@@ -71,7 +71,7 @@ Route::get('/failed_jobs/search/{search}', 'App\Http\Controllers\Api\Auth\Failed
 Route::get('/food', 'App\Http\Controllers\Api\Auth\FoodController@index')->name('api.auth.index.food');
 Route::get('/food/{id}', 'App\Http\Controllers\Api\Auth\FoodController@show')->name('api.auth.show.food');
 Route::post('/food', 'App\Http\Controllers\Api\Auth\FoodController@store')->name('api.auth.store.food');
-Route::put('/food/{id}', 'App\Http\Controllers\Api\Auth\FoodController@update')->name('api.auth.update.food');
+Route::post('/food/{id}', 'App\Http\Controllers\Api\Auth\FoodController@update')->name('api.auth.update.food');
 Route::delete('/food/{id}', 'App\Http\Controllers\Api\Auth\FoodController@destroy')->name('api.auth.delete.food');
 Route::get('/food/search/{search}', 'App\Http\Controllers\Api\Auth\FoodController@search')->name('api.auth.search.food');
 
@@ -180,7 +180,7 @@ Route::get('/visitor_information/{id}', 'App\Http\Controllers\Api\Auth\VisitorIn
 Route::post('/visitor_information', 'App\Http\Controllers\Api\Auth\VisitorInformationController@store')->name('api.auth.store.visitor_information');
 Route::put('/visitor_information/{id}', 'App\Http\Controllers\Api\Auth\VisitorInformationController@update')->name('api.auth.update.visitor_information');
 Route::delete('/visitor_information/{id}', 'App\Http\Controllers\Api\Auth\VisitorInformationController@destroy')->name('api.auth.delete.visitor_information');
-Route::get('/visitor_information/search/{search}', 'App\Http\Controllers\Api\Auth\VisitorInformationController@search')->name('api.auth.search.visitor_information');
+Route::get('/visitor_information/search/{search}', 'App\Http\Controllers\Api\Auth\VisitorInformationController@search')->name('api.auth.search.visitor_info');
    
 });
 
